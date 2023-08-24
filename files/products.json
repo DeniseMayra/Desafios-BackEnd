@@ -1,0 +1,20 @@
+[
+	{
+		"title": "Iphone 12",
+		"desc": "Iphone nuevo",
+		"price": "980USD",
+		"thumbnail": "https://www.macstation.com.ar/img/productos/2493-2317-1.jpg",
+		"stock": "10",
+		"code": "0111",
+		"id": 1
+	},
+	{
+		"title": "Iphone 11",
+		"desc": "Iphone nuevo",
+		"price": "980USD",
+		"thumbnail": "https://www.macstation.com.ar/img/productos/2493-2317-1.jpg",
+		"stock": "10",
+		"code": "0222",
+		"id": 2
+	}
+]
