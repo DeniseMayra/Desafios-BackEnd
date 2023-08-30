@@ -1,0 +1,15 @@
+{
+  "type": "module",
+  "name": "desafios",
+  "version": "1.0.0",
+  "description": "1. Desafio: ECMAScript (15-8-2023)\r > Repaso de JS, clases y metodos",
+  "main": "productManager.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
