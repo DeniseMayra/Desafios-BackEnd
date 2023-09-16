@@ -1,0 +1,30 @@
+<h1>Home</h1>
+
+<h3>Todos lo productos</h3>
+
+<table class="table table-dark table-striped">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Title</th>
+      <th scope="col">Description</th>
+      <th scope="col">Price</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    {{#each data}}
+      <tr>
+        <th scope="row">1</th>
+        <td>{{this.title}}</td>
+        <td>{{this.desc}}</td>
+        <td>$ {{this.price}}</td>
+      </tr>
+
+    {{/each}}
+
+  </tbody>
+</table>
+
+
+

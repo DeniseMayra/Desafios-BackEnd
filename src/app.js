@@ -1,30 +1,52 @@
 import express from 'express';
+import { productsRouter } from './router/products.router.js';
+import { viewRouter } from './router/view.router.js';
+import { engine } from 'express-handlebars';
+import { __dirname } from './utils.js';
+import path from 'path';
+import { Server } from 'socket.io';
 import { ProductManager } from './productManager.js';
 
+const tecnology = new ProductManager('../files/products.json');
+
+// ---------- CONFIG ----------
 const port = 8080;
 const app = express();
 app.use(express.urlencoded({extended:true}));
+app.use(express.json());
 
-const tecnology = new ProductManager();
+
+// ---------- ROUTES ----------
+app.use('/api/products', productsRouter);
+app.use('/', viewRouter);
 
 
-app.get('/products', (req, res) => {
-  const products = tecnology.getProducts();
-  const limit = req.query.limit;
-  if (limit){
-    res.send(products.slice(0, limit));
-  } else {
-    res.send(products);
-  }
-});
+// ---------- VIEWS ----------
+app.engine('.hbs', engine({extname: '.hbs'}));
+app.set('view engine', '.hbs');
+app.set('views', path.join(__dirname, '/views'));
 
-app.get('/products/:pid', (req, res) => {
-  const managerResponse = tecnology.getProductById(parseInt(req.params.pid));
-  if (managerResponse.error){
-    res.send(`Not Found product with id ${req.params.pid}`);
-  } else {
-    res.send(managerResponse.product);
-  }
-});
+app.use(express.static(path.join(__dirname, '/public')));
 
-app.listen(port, () => console.log('Servidor funcionando en el puerto ' + port));
+
+// ---------- SERVER ----------
+// server with express, http protocol
+const httpServer = app.listen(port, () => console.log('Servidor funcionando en el puerto ' + port));
+// Websocket server
+export const socketServer = new Server(httpServer);
+
+socketServer.on('connection', async (socket) => {
+  console.log('usuario: ' + socket.id);
+
+  socket.on('newProduct', async (data) => {
+    const response = await tecnology.addProduct(data);
+
+    if (!response.error){
+      const products = await tecnology.getProducts();
+
+      socketServer.emit('update', products);
+    }
+  })
+
+})
+
