@@ -10,3 +10,6 @@
 
 3. Desafio: Servidor con Express (29-8-2023)
 > Servidor con express con endpoints llamando a productManager
+
+4. Desafio: Servidor con Websockets (12-9-2023)
+> Agregando routes al proyecto, views con Handlebars y Websockets

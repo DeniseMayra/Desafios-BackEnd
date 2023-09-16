@@ -2,7 +2,7 @@
 	{
 		"title": "Iphone 12",
 		"desc": "Iphone nuevo",
-		"price": "980USD",
+		"price": "980 USD",
 		"thumbnail": "https://www.macstation.com.ar/img/productos/2493-2317-1.jpg",
 		"stock": "10",
 		"code": "0111",
@@ -11,10 +11,24 @@
 	{
 		"title": "Iphone 11",
 		"desc": "Iphone nuevo",
-		"price": "980USD",
+		"price": "980 USD",
 		"thumbnail": "https://www.macstation.com.ar/img/productos/2493-2317-1.jpg",
 		"stock": "10",
 		"code": "0222",
 		"id": 2
+	},
+	{
+		"title": "airpods",
+		"desc": "nuevo modelo",
+		"price": "105",
+		"code": "b",
+		"id": "8bfc781a-fea0-4bd5-bce5-ec9900896326"
+	},
+	{
+		"title": "airpods",
+		"desc": "nuevo modelo",
+		"price": "105 usd",
+		"code": "c",
+		"id": "493f4eb1-5d10-4647-ac2f-841d71754e64"
 	}
 ]
