@@ -5,7 +5,8 @@ import { engine } from 'express-handlebars';
 import { __dirname } from './utils.js';
 import path from 'path';
 import { Server } from 'socket.io';
-import { ProductManager } from './productManager.js';
+import { ProductManager } from './dao/fileSystem/productManager.js';
+import { connectDB } from './config/dbConnection.js';
 
 const tecnology = new ProductManager('../files/products.json');
 
@@ -28,6 +29,8 @@ app.set('views', path.join(__dirname, '/views'));
 
 app.use(express.static(path.join(__dirname, '/public')));
 
+// ---------- DATA BASE ----------
+connectDB();
 
 // ---------- SERVER ----------
 // server with express, http protocol
