@@ -7,7 +7,9 @@ import path from 'path';
 import { Server } from 'socket.io';
 import { ProductManager } from './dao/fileSystem/productManager.js';
 import { connectDB } from './config/dbConnection.js';
+import { productsRouterMongo } from './router/products.mongo.router.js';
 
+const isDBSystem = true;
 const tecnology = new ProductManager('../files/products.json');
 
 // ---------- CONFIG ----------
@@ -18,7 +20,11 @@ app.use(express.json());
 
 
 // ---------- ROUTES ----------
-app.use('/api/products', productsRouter);
+if (isDBSystem) {
+  app.use('/api/products', productsRouterMongo);
+} else {
+  app.use('/api/products', productsRouter);
+}
 app.use('/', viewRouter);
 
 
@@ -32,23 +38,26 @@ app.use(express.static(path.join(__dirname, '/public')));
 // ---------- DATA BASE ----------
 connectDB();
 
+
 // ---------- SERVER ----------
-// server with express, http protocol
 const httpServer = app.listen(port, () => console.log('Servidor funcionando en el puerto ' + port));
-// Websocket server
 export const socketServer = new Server(httpServer);
 
 socketServer.on('connection', async (socket) => {
   console.log('usuario: ' + socket.id);
 
   socket.on('newProduct', async (data) => {
-    const response = await tecnology.addProduct(data);
 
-    if (!response.error){
-      const products = await tecnology.getProducts();
-
-      socketServer.emit('update', products);
+    if (!isDBSystem){
+      const response = await tecnology.addProduct(data);
+      
+      if (!response.error){
+        const products = await tecnology.getProducts();
+  
+        socketServer.emit('update', products);
+      }
     }
+
   })
 
 })
