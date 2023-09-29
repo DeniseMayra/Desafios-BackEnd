@@ -8,8 +8,7 @@ export class ProductManager {
 
     addProduct = async(object) => { 
         try{
-            //  && object.thumbnail && object.stock && object.code
-            if (object.title && object.desc && object.price) {
+            if (object.title && object.description && object.price && object.status && object.thumbnail && object.stock && object.code && object.category) {
                 const allProducts = await this.getProducts();
 
                 if (this.isValidCode(object.code, allProducts)){
