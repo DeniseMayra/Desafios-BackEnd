@@ -1,32 +1,57 @@
 import { Router } from 'express';
 import { productsService } from '../dao/mongo/services.js';
+import { ERROR, SUCCESS } from '../clases/constant.js';
 
 const router = Router();
 
 router.get('/', async (req, res) => {
   try{
-    const result = await productsService.getProducts();
-    res.json({status:'success', data: result});
+    const result = await productsService.getProducts(); //array
+    res.json({status: SUCCESS, data: result, message: ''});
    
   } catch (error) {
-    res.status(500).json({stauts:'error', message: error.message});
+    res.status(500).json({stauts: ERROR, data: null, message: error.message});
   }
 });
 
-// router.get('/:pid', async(req, res) => {
-//   try{
-//     res.json(await tecnology.getProductById(req.params.pid));
-//   } catch (error) {
-//     console.log('ERROR: ', error.message);
-//   }
-// });
+router.get('/:pid', async(req, res) => {
+  try{
+    const result = await productsService.getProductById(req.params.pid); //object
+    res.json({status: SUCCESS, data: result, message: ''});
 
-// router.post('/', async(req,res) => {
-//   try{
-//     res.json(await tecnology.addProduct(req.body));
-//   } catch (error) {
-//     console.log('ERROR: ', error.message);
-//   }
-// })
+  } catch (error) {
+    res.status(500).json({stauts: ERROR, data: null, message: error.message});
+  }
+});
+
+router.post('/', async(req,res) => {
+  try{
+    const result = await productsService.addProduct(req.body); //object
+    res.json({status: SUCCESS, data: result, message: ''});
+
+  } catch (error) {
+    res.status(500).json({stauts: ERROR, data: null, message: error.message});
+  }
+})
+
+router.put('/:id', async(req,res) => {
+  try{
+    const result = await productsService.updateProduct(req.params.id, req.body); //object
+    res.json({status: SUCCESS, data: result, message: ''});
+
+  } catch (error) {
+    res.status(500).json({stauts: ERROR, data: null, message: error.message});
+  }
+})
+
+router.delete('/:id', async(req,res) => {
+  try{
+    const result = await productsService.deleteProduct(req.params.id);  //objeto eliminado
+    res.json({status: SUCCESS, data: result, message: ''});
+
+  } catch (error) {
+    res.status(500).json({stauts: ERROR, data: null, message: error.message});
+  }
+})
 
 export { router as productsRouterMongo};

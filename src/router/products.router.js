@@ -1,38 +1,82 @@
 import { Router } from 'express';
-import { ProductManager } from '../dao/fileSystem/productManager.js';
+import { ProductManager } from '../dao/fileSystem/manager/productManager.js';
+import { ERROR, SUCCESS } from '../clases/constant.js';
+
 
 const router = Router();
-const tecnology = new ProductManager('../files/products.json');
+const manager = new ProductManager('./src/dao/fileSystem/files/products.json');
 
-router.get('/', async (req, res) => {
+router.get('/', async (req,res) => {
   try{
-    const products = await tecnology.getProducts();
+    const products = await manager.getProducts();
     const limit = req.query.limit;
     if (limit){
-      res.json({data: products.slice(0, limit)});
+      res.json({status: SUCCESS, data: products.slice(0, limit), message: ''});
     } else {
-      // res.send(products);
-      res.json({data: products});
+      res.json({status: SUCCESS, data: products, message: ''});
     }
+
   } catch (error) {
-    console.log('ERROR: ', error.message);
+    res.status(500).json({stauts: ERROR, data: null, message: error.message});
   }
 });
 
-router.get('/:pid', async(req, res) => {
+router.get('/:pid', async (req, res) => {
   try{
-    res.json(await tecnology.getProductById(req.params.pid));
+    const result = await manager.getProductById(req.params.pid);
+    if (result.error){
+      res.status(500).json({stauts: ERROR, data: null, message: result.message});
+    } else {
+      res.json({status: SUCCESS, data: result.product, message: ''});
+    }
+
   } catch (error) {
-    console.log('ERROR: ', error.message);
+    res.status(500).json({stauts: ERROR, data: null, message: error.message});
   }
 });
 
 router.post('/', async(req,res) => {
   try{
-    res.json(await tecnology.addProduct(req.body));
+    const result = await manager.addProduct(req.body);
+
+    if (result.error){
+      res.status(500).json({stauts: ERROR, data: null, message: result.message});
+    } else {
+      res.json({status: SUCCESS, data: result.product, message: ''});
+    }
+
   } catch (error) {
-    console.log('ERROR: ', error.message);
+    res.status(500).json({stauts: ERROR, data: null, message: error.message});
   }
 })
 
-export { router as productsRouter};
+router.put('/:pid', async(req,res) => {
+  try{
+    const result = await manager.updateProduct(req.params.pid, req.body);
+
+    if (result.error){
+      res.status(500).json({stauts: ERROR, data: null, message: result.message});
+    } else {
+      res.json({status: SUCCESS, data: result.product, message: ''});
+    }
+  
+  } catch (error) {
+    res.status(500).json({stauts: ERROR, data: null, message: error.message});
+  }
+})
+
+router.delete('/:pid', async(req,res) => {
+  try{
+    const result = await manager.deleteProduct(req.params.pid);
+    if (result.error){
+      res.status(500).json({stauts: ERROR, data: null, message: result.message});
+    } else {
+      res.json({status: SUCCESS, data: result.product, message: ''});
+    }
+  
+  } catch (error) {
+    res.status(500).json({stauts: ERROR, data: null, message: error.message});
+  }
+})
+
+export { router as productRouter };

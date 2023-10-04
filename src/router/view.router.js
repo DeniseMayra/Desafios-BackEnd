@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { ProductManager } from '../dao/fileSystem/productManager.js';
+import { ProductManager } from '../dao/fileSystem/manager/productManager.js';
 
 const viewRouter = Router();
 const tecnology = new ProductManager('../files/products.json');

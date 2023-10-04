@@ -11,8 +11,7 @@ export class ProductManagerMongo {
       return result;
 
     } catch (error) {
-      console.log('ERROR: ', error.message);
-      throw new Error('No se puede crear el producto');
+      throw new Error(error.message);
     }
   }
 
@@ -22,8 +21,7 @@ export class ProductManagerMongo {
       return result;
 
     } catch (error) {
-      console.log('ERROR: ', error.message);
-      throw new Error('No se puede obtener los productos');
+      throw new Error(error.message);
     }
   }
 
@@ -33,8 +31,11 @@ export class ProductManagerMongo {
       return result;
 
     } catch (error) {
-      console.log('ERROR: ', error.message);
-      throw new Error('No se puede obtener el producto');
+      if (error.kind === 'ObjectId') {
+        throw new Error('Id no encontrado');
+      } else {
+        throw new Error(error.message);
+      }
     }
   }
 
@@ -43,28 +44,28 @@ export class ProductManagerMongo {
       // new:true me devuelve el producto ya modificado
       // si paso un solo dato tendria que hacer .updateOne({_id:id}, {$set filtrado}) porque findeandup se actualiza todo el doc, hay que pasar todos los datos
       const result = await this.model.findByIdAndUpdate( id, objectModify, {new:true});
-      if (!result){
-        throw new Error('No se puede encontrar el producto');
-      }
       return result;
 
     } catch (error) {
-      console.log('ERROR: ', error.message);
-      throw new Error('No se puede actualizar el producto');
+      if (error.kind === 'ObjectId') {
+        throw new Error('Id no encontrado');
+      } else {
+        throw new Error(error.message);
+      }
     }
   }
 
   deleteProduct = async (id) => {
     try{
-      const result = await this.model.findByInAndDelete(id);
-      if (!result){
-        throw new Error('No se puede encontrar el producto');
-      }
+      const result = await this.model.findByIdAndDelete(id);
       return result;
 
     } catch (error){
-      console.log('ERROR: ', error.message);
-      throw new Error('No se puede eliminar el producto');
+      if (error.kind === 'ObjectId') {
+        throw new Error('Id no encontrado');
+      } else {
+        throw new Error(error.message);
+      }
     }
   }
 };

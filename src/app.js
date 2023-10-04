@@ -1,15 +1,15 @@
 import express from 'express';
-import { productsRouter } from './router/products.router.js';
+import { productRouter } from './router/products.router.js';
 import { viewRouter } from './router/view.router.js';
 import { engine } from 'express-handlebars';
 import { __dirname } from './utils.js';
 import path from 'path';
 import { Server } from 'socket.io';
-import { ProductManager } from './dao/fileSystem/productManager.js';
+import { ProductManager } from './dao/fileSystem/manager/productManager.js';
 import { connectDB } from './config/dbConnection.js';
 import { productsRouterMongo } from './router/products.mongo.router.js';
 
-const isDBSystem = true;
+const isDBSystem = false;
 const tecnology = new ProductManager('../files/products.json');
 
 // ---------- CONFIG ----------
@@ -21,9 +21,10 @@ app.use(express.json());
 
 // ---------- ROUTES ----------
 if (isDBSystem) {
+  connectDB();
   app.use('/api/products', productsRouterMongo);
 } else {
-  app.use('/api/products', productsRouter);
+  app.use('/api/products', productRouter);
 }
 app.use('/', viewRouter);
 
@@ -34,9 +35,6 @@ app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, '/views'));
 
 app.use(express.static(path.join(__dirname, '/public')));
-
-// ---------- DATA BASE ----------
-connectDB();
 
 
 // ---------- SERVER ----------
