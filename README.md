@@ -15,10 +15,10 @@
 > Agregando routes al proyecto, views con Handlebars y Websockets
 
 5. Copy of Proyect
-  _ Data en MongoDB manejado por sus respectivos endpoints, vista HBS productos con paginacion, populacion y carrito. Funcionalidad de agregar al carrito.
-  _ Implementacion de singup, login y logout, con sus respectivas vistas condicionales.
-  _ Session con mongo store
-  _ Hasheo de password, implementacion de passport, autenticacion Local y con GitHub.
+  - Data en MongoDB manejado por sus respectivos endpoints, vista HBS productos con paginacion, populacion y carrito. Funcionalidad de agregar al carrito.
+  - Implementacion de singup, login y logout, con sus respectivas vistas condicionales.
+  - Session con mongo store
+  - Hasheo de password, implementacion de passport, autenticacion Local y con GitHub.
 
 --------------------------------------------------------------------
 
