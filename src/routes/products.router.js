@@ -1,12 +1,11 @@
 import { Router } from 'express';
-import { ProductManager } from '../dao/fileSystem/manager/productManager.js';
 import { ERROR, SUCCESS } from '../clases/constant.js';
+import { ProductManager } from '../dao/fileSystem/manager/productManager.js';
 
+const productRouter = Router();
+const manager = new ProductManager('./dao/fileSystem/files/productos.json');
 
-const router = Router();
-const manager = new ProductManager('./src/dao/fileSystem/files/products.json');
-
-router.get('/', async (req,res) => {
+productRouter.get('/', async (req,res) => {
   try{
     const products = await manager.getProducts();
     const limit = req.query.limit;
@@ -21,7 +20,7 @@ router.get('/', async (req,res) => {
   }
 });
 
-router.get('/:pid', async (req, res) => {
+productRouter.get('/:pid', async (req, res) => {
   try{
     const result = await manager.getProductById(req.params.pid);
     if (result.error){
@@ -35,7 +34,7 @@ router.get('/:pid', async (req, res) => {
   }
 });
 
-router.post('/', async(req,res) => {
+productRouter.post('/', async(req,res) => {
   try{
     const result = await manager.addProduct(req.body);
 
@@ -48,9 +47,9 @@ router.post('/', async(req,res) => {
   } catch (error) {
     res.status(500).json({stauts: ERROR, data: null, message: error.message});
   }
-})
+});
 
-router.put('/:pid', async(req,res) => {
+productRouter.put('/:pid', async(req,res) => {
   try{
     const result = await manager.updateProduct(req.params.pid, req.body);
 
@@ -63,9 +62,9 @@ router.put('/:pid', async(req,res) => {
   } catch (error) {
     res.status(500).json({stauts: ERROR, data: null, message: error.message});
   }
-})
+});
 
-router.delete('/:pid', async(req,res) => {
+productRouter.delete('/:pid', async(req,res) => {
   try{
     const result = await manager.deleteProduct(req.params.pid);
     if (result.error){
@@ -77,6 +76,6 @@ router.delete('/:pid', async(req,res) => {
   } catch (error) {
     res.status(500).json({stauts: ERROR, data: null, message: error.message});
   }
-})
+});
 
-export { router as productRouter };
+export { productRouter };

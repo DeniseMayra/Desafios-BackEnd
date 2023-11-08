@@ -1,32 +1,72 @@
 import express from 'express';
-import { productRouter } from './router/products.router.js';
-import { viewRouter } from './router/view.router.js';
 import { engine } from 'express-handlebars';
-import { __dirname } from './utils.js';
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
+import passport from 'passport';
+import cors from 'cors';
 import path from 'path';
-import { Server } from 'socket.io';
-import { ProductManager } from './dao/fileSystem/manager/productManager.js';
+import { __dirname } from './utils.js';
 import { connectDB } from './config/dbConnection.js';
-import { productsRouterMongo } from './router/products.mongo.router.js';
+import { productRouter } from './routes/products.router.js';
+import { productsRouterMongo } from './routes/products.mongo.router.js';
+import { cartRouter } from './routes/carts.router.js';
+import { cartsRouterMongo } from './routes/carts.mongo.router.js';
+import { messageRouterMongo } from './routes/messages.mongo.router.js';
+import { viewsRouter } from './routes/views.router.js';
+import { viewsPassportRouter } from './routes/views-passport.router.js';
+import { sessionRouter } from './routes/sessions.router.js';
+import { sessionPassportRouter } from './routes/session-passport.router.js';
+import { initializePassport } from './config/passportConfig.js';
+import { config } from './config/config.js';
 
-const isDBSystem = false;
-const tecnology = new ProductManager('../files/products.json');
+const isDBSystem = true;
+const sessionWithPassport = true;
 
 // ---------- CONFIG ----------
-const port = 8080;
 const app = express();
-app.use(express.urlencoded({extended:true}));
+const port = 8080;
 app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+app.use(cors());
 
 
-// ---------- ROUTES ----------
-if (isDBSystem) {
+// ---------- SESSION ----------
+app.use(session({
+  store: MongoStore.create({
+    ttl: 3000,
+    mongoUrl: config.mongo.url
+  }),
+  secret: config.server.secretSession,
+  resave: true,
+  saveUninitialized: true
+}));
+
+
+// ---------- PASSPORT ----------
+if (sessionWithPassport){
+  initializePassport();
+  app.use(passport.initialize());
+  app.use(passport.session());
+}
+
+
+// ---------- DATA BASE ----------
+if (isDBSystem){
   connectDB();
+  app.use('/api/carts', cartsRouterMongo);
   app.use('/api/products', productsRouterMongo);
+  app.use('/api/message', messageRouterMongo);
 } else {
+  app.use('/api/carts', cartRouter);
   app.use('/api/products', productRouter);
 }
-app.use('/', viewRouter);
+if (sessionWithPassport){
+  app.use('/', viewsPassportRouter);
+  app.use('/api/sessions', sessionPassportRouter);
+} else {
+  app.use('/', viewsRouter);
+  app.use('/api/sessions', sessionRouter);
+}
 
 
 // ---------- VIEWS ----------
@@ -38,25 +78,4 @@ app.use(express.static(path.join(__dirname, '/public')));
 
 
 // ---------- SERVER ----------
-const httpServer = app.listen(port, () => console.log('Servidor funcionando en el puerto ' + port));
-export const socketServer = new Server(httpServer);
-
-socketServer.on('connection', async (socket) => {
-  console.log('usuario: ' + socket.id);
-
-  socket.on('newProduct', async (data) => {
-
-    if (!isDBSystem){
-      const response = await tecnology.addProduct(data);
-      
-      if (!response.error){
-        const products = await tecnology.getProducts();
-  
-        socketServer.emit('update', products);
-      }
-    }
-
-  })
-
-})
-
+app.listen(port, () => console.log('Server funcionando en el puerto ' + port));

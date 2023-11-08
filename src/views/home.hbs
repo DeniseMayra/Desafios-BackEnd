@@ -1,30 +1,43 @@
-<h1>Home</h1>
+<h1>PRODUCTOS</h1>
 
-<h3>Todos lo productos</h3>
+<h3>{{welcomeMessage}}</h3>
 
-<table class="table table-dark table-striped">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Title</th>
-      <th scope="col">Description</th>
-      <th scope="col">Price</th>
-    </tr>
-  </thead>
-  <tbody>
+<div class="container">
 
-    {{#each data}}
-      <tr>
-        <th scope="row">1</th>
-        <td>{{this.title}}</td>
-        <td>{{this.desc}}</td>
-        <td>$ {{this.price}}</td>
-      </tr>
+  <div style="display: flex; flex-wrap: wrap;">
+    {{#each data.payload}}
+
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">{{this.title}}</h5>
+          <p class="card-text">{{this.desc}}</p>
+          <p>$ {{this.price}}</p>
+          <a href="#" class="btn btn-primary" onclick="addToCart(`{{this._id}}`)">Add to Cart</a>
+        </div>
+      </div>
 
     {{/each}}
 
-  </tbody>
-</table>
+  </div>
+
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+      <li class="page-item">
+        <a class="page-link" href="{{data.prevLink}}" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="{{data.nextLink}}" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+</div>
+
+<a href="http://localhost:8080/cart">Go to Cart</a>
 
 
-
+<script src="/js/index.js"></script>

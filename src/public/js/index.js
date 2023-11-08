@@ -1,32 +1,28 @@
-const socketClient = io();
+const cartId = '651f6661f0f110960f1f1dfb';
+const url = 'http://localhost:8080';
 
-const tableDataElement = document.getElementById('table-data');
-const formElement = document.getElementById('form');
+function addToCart(pid) {
+  const options = {
+    method: 'POST',
+    body: JSON.stringify({quantity: 1})
+  }
+  fetch(`${url}/api/carts/${cartId}/products/${pid}`, options)
+  .then(function(response){
+    if (response.status === 200){
+      alert('Producto Agregado');
+    }
+  });
+}
 
-formElement.addEventListener('submit', (event) => {
-  event.preventDefault();
-
-  const data = Object.fromEntries(
-    new FormData(event.target)
-  );
-  
-  socketClient.emit('newProduct', data);
-});
-
-socketClient.on('update', (data) => {
-  createHTML(data);
-});
-
-function createHTML(data) {
-  let content = '';
-  data.forEach((ele, index) => {
-    content = content + `<tr>
-        <th scope="row">${index+1}</th>
-        <td>${ele.code}</td>
-        <td>${ele.title}</td>
-        <td>${ele.desc}</td>
-        <td>$ ${ele.price}</td>
-      </tr>`
-    tableDataElement.innerHTML = content;
-  })
+function deleteProductFromCart(pid) {
+  const options = {
+    method: 'DELETE',
+  }
+  fetch(`${url}/api/carts/${cartId}/products/${pid}`, options)
+  .then(function(response){
+    if (response.status === 200){
+      alert('Producto Eliminado');
+    }
+    location.reload();
+  });
 }

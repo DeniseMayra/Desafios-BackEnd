@@ -13,3 +13,20 @@
 
 4. Desafio: Servidor con Websockets (12-9-2023)
 > Agregando routes al proyecto, views con Handlebars y Websockets
+
+5. Copy of Proyect
+> Data en MongoDB manejado por sus respectivos endpoints, vista HBS productos con paginacion, populacion y carrito. Funcionalidad de agregar al carrito.
+> Implementacion de singup, login y logout, con sus respectivas vistas condicionales.
+> Session con mongo store
+> Hasheo de password, implementacion de passport, autenticacion Local y con GitHub.
+
+--------------------------------------------------------------------
+
+* Persistencia
+- [x] Data Base: MongoDB
+- [ ] File System
+
+* Sessions
+- [x] With Passport
+- [ ] Hardcoded system
+
